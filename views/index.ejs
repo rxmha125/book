@@ -9,41 +9,59 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
         }
-
-        header {
+    
+        header, footer {
             background-color: #4CAF50;
             color: white;
-            padding: 10px 15px;
+            padding: 15px;
             text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
+    
+        main {
+            padding: 10px;
+        }
+    
         #subject-buttons, #action-buttons {
-            margin: 20px;
+            margin: 10px auto;
             text-align: center;
         }
-
+    
         #subject-buttons button, #action-buttons button {
             margin: 5px;
-            padding: 10px 15px;
+            padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #f4f4f4;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 250px;
         }
-
+    
         #subject-buttons button:hover, #action-buttons button:hover {
             background-color: #ddd;
         }
-
+    
         #pdf-viewer {
-            margin: 20px auto;
-            max-width: 90%;
+            margin: 10px auto;
+            width: 100%;
+            max-width: 100%;
             border: 1px solid #ddd;
             border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-
+    
+        embed {
+            width: 100%;
+            height: 500px;
+        }
+    
         .highlight-popup {
             display: none;
             position: absolute;
@@ -52,16 +70,109 @@
             padding: 10px;
             z-index: 1000;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+            max-width: 90%;
         }
-
+    
         .highlight-popup button {
             margin: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: background-color 0.3s ease;
         }
-
+    
+        .highlight-popup button:nth-child(2) {
+            background-color: yellow;
+        }
+    
+        .highlight-popup button:nth-child(3) {
+            background-color: lightgreen;
+        }
+    
+        .highlight-popup button:nth-child(4) {
+            background-color: pink;
+        }
+    
+        .highlight-popup button:nth-child(5) {
+            background-color: lightblue;
+        }
+    
+        .highlight-popup button:hover {
+            opacity: 0.8;
+        }
+    
         .highlighted {
             background-color: yellow;
         }
+    
+        footer {
+            margin-top: 20px;
+            padding: 10px;
+        }
+    
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            header, footer {
+                padding: 10px;
+                font-size: 18px;
+            }
+    
+            #subject-buttons button, #action-buttons button {
+                width: 90%;
+                font-size: 14px;
+                padding: 10px;
+            }
+    
+            embed {
+                height: 400px;
+            }
+    
+            .highlight-popup {
+                max-width: 80%;
+                left: 10%;
+            }
+    
+            main {
+                padding: 5px;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            header, footer {
+                padding: 8px;
+                font-size: 16px;
+            }
+    
+            #subject-buttons button, #action-buttons button {
+                width: 100%;
+                font-size: 12px;
+                padding: 8px;
+            }
+    
+            embed {
+                height: 300px;
+            }
+    
+            .highlight-popup {
+                max-width: 90%;
+                left: 5%;
+            }
+        }
     </style>
+        
 </head>
 <body>
     <header>
