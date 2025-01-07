@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -11,20 +10,6 @@ app.use(bodyParser.json());
 // Serve books folder for PDFs
 app.use('/books', express.static(path.join(__dirname, 'books')));
 
-// Set up SQLite3 database
-const db = new sqlite3.Database('./highlights.db', (err) => {
-    if (err) {
-        console.error('Error opening database:', err.message);
-    } else {
-        db.run(`
-            CREATE TABLE IF NOT EXISTS highlights (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                text TEXT,
-                color TEXT
-            )
-        `);
-    }
-});
 
 // Serve EJS templates
 app.set('view engine', 'ejs');
