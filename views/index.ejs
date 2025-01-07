@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 8 Book Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+        #subject-buttons, #action-buttons {
+            margin: 20px;
+            text-align: center;
+        }
+
+        #subject-buttons button, #action-buttons button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+        }
+
+        #subject-buttons button:hover, #action-buttons button:hover {
+            background-color: #ddd;
+        }
+
+        #pdf-viewer {
+            margin: 20px auto;
+            max-width: 90%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .highlight-popup {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight-popup button {
+            margin: 5px;
+        }
+
+        .highlighted {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Class 8 Book Viewer - Bangladesh 2025</h1>
+    </header>
+
+    <main>
+        <div id="subject-buttons">
+            <button onclick="loadBook('bangla3.pdf')">Bangla</button>
+            <button onclick="loadBook('english.pdf')">English</button>
+            <button onclick="loadBook('math.pdf')">Math</button>
+            <button onclick="loadBook('science.pdf')">Science</button>
+            <button onclick="loadBook('bgs.pdf')">History</button>
+            <button onclick="loadBook('ict.pdf')">ICT</button>
+            <button onclick="loadBook('islam.pdf')">Islam</button>
+        </div>
+
+        <div id="action-buttons">
+            <button onclick="togglePopup()">Highlight</button>
+            <button onclick="saveHighlight()">Save Highlights</button>
+        </div>
+
+        <div id="pdf-viewer">
+            <embed id="pdf-embed" src="/books/bangla3.pdf" type="application/pdf" width="100%" height="600px">
+        </div>
+
+        <div id="highlight-popup" class="highlight-popup">
+            <p>Select a highlight color:</p>
+            <button onclick="applyHighlight('yellow')">Yellow</button>
+            <button onclick="applyHighlight('green')">Green</button>
+            <button onclick="applyHighlight('pink')">Pink</button>
+            <button onclick="applyHighlight('blue')">Blue</button>
+            <br>
+            <button onclick="selectArea()">Select Area</button>
+        </div>
+    </main>
+    <script>
+        let selectedText = '';
+        const popup = document.getElementById('highlight-popup');
+    
+        function loadBook(filename) {
+            document.getElementById('pdf-embed').src = '/books/' + filename;
+        }
+    
+        function togglePopup(event) {
+            // Toggle popup visibility
+            if (popup.style.display === 'none' || !popup.style.display) {
+                popup.style.display = 'block';
+                popup.style.left = `${event?.pageX || window.innerWidth / 2}px`;
+                popup.style.top = `${event?.pageY || 100}px`;
+            } else {
+                popup.style.display = 'none';
+            }
+        }
+    
+        function saveHighlight() {
+            const highlights = Array.from(document.querySelectorAll('.highlighted')).map(span => ({
+                text: span.textContent,
+                color: span.style.backgroundColor,
+            }));
+    
+            fetch('/save-highlight', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ highlights }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Highlights saved!');
+            })
+            .catch(err => {
+                alert('Failed to save highlights. Check the console for details.');
+            });
+        }
+    
+        function applyHighlight(color) {
+            if (!selectedText) {
+                alert('No text selected!');
+                return;
+            }
+    
+            const span = document.createElement('span');
+            span.style.backgroundColor = color;
+            span.classList.add('highlighted');
+            span.textContent = selectedText;
+    
+            const range = window.getSelection().getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(span);
+    
+            popup.style.display = 'none'; // Hide popup
+            selectedText = ''; // Reset selected text
+        }
+    
+        function selectArea() {
+            const selection = window.getSelection();
+            selectedText = selection.toString();
+    
+            if (!selectedText.trim()) {
+                alert('Please select some text to highlight!');
+            }
+        }
+    
+        document.addEventListener('mouseup', (event) => {
+            const selection = window.getSelection();
+            if (selection.toString().trim()) {
+                selectedText = selection.toString();
+            }
+        });
+    </script>
+</body>
+</html>
